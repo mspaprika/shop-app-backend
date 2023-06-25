@@ -16,31 +16,44 @@ export async function getUsers() {
     return users[0];
 }
 
-export async function login(name, password) {
-
-    const userObj = await pool.query('SELECT * FROM users WHERE name = ?', [name]);
-
+export async function getUserByToken(token) {
+    const userObj = await pool.query('SELECT * FROM users WHERE token = ?', [token]);
     const user = userObj[0][0];
+    return user;
+}
 
-    if (user == null) {
-        return false;
-    }
+export async function getUserById(id) {
+    const userObj = await pool.query('SELECT * FROM users WHERE id = ?', [id]);
+    const user = userObj[0][0];
+    return user;
+}
 
+export async function getUserByName(name) {
+    const userObj = await pool.query('SELECT * FROM users WHERE name = ?', [name]);
+    const user = userObj[0][0];
+    return user;
+}
+
+export async function setUserToken(userId, token) {
     try {
-        if (await bcrypt.compare(password, user.password)) {
-            return user.id;
-        } else {
-            return false;
-        }
-    } catch (error) {
+        await pool.query('UPDATE users SET token = ? WHERE id = ?', [token, userId]);
+    }
+    catch (error) {
         console.log(error);
-        return false;
+    }
+}
+
+export async function removeUserToken(userId) {
+    try {
+        await pool.query('UPDATE users SET token = NULL WHERE id = ?', [userId]);
+    }
+    catch (error) {
+        console.log(error);
     }
 }
 
 export async function addUser(name, password) {
     try {
-        console.log(name, password)
         const salt = await bcrypt.genSalt();
         const hashedPassword = await bcrypt.hash(password, salt);
         await pool.query('INSERT INTO users (name, password) VALUES (?, ?)',

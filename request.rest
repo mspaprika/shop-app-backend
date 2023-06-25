@@ -30,6 +30,6 @@ POST http://localhost:3000/authenticate
 Content-Type: application/json
 
 {
-    "name": "testUser",
-    "password": "Password"
+    "name": "Milka",
+    "password": "Aleliuja"
 }

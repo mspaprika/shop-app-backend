@@ -1,6 +1,6 @@
 import express from 'express';
 import { config } from 'dotenv';
-import { getUsers } from './database.mjs';
+import { getUsers } from './db/database.mjs';
 
 config();
 
